@@ -16,9 +16,9 @@ namespace Blog.Controllers
     {
         private readonly UserService _userService;
 
-        public AccountController(BlogDbContext dbContext)
+        public AccountController(UserService userService)
         {
-            _userService = new UserService(dbContext);
+            _userService = userService;
         }
 
         [HttpGet]

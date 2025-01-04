@@ -1,5 +1,6 @@
 using Blog.Data;
 using Blog.Models;
+using Blog.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,7 @@ builder.Services.AddDbContext<BlogDbContext>(
     options => 
         options.UseSqlServer(
             builder.Configuration.GetConnectionString("SqlServerConnection")));
+builder.Services.AddTransient<UserService>();
 
 var app = builder.Build();
 app.UseSwagger();
