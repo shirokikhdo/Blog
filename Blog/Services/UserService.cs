@@ -1,11 +1,58 @@
 ﻿using System.Security.Claims;
 using System.Text;
 using Blog.Data;
+using Blog.Models;
 
 namespace Blog.Services;
 
 public class UserService
 {
+    private readonly BlogDbContext _dbContext;
+
+    public UserService(BlogDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public UserModel Create(UserModel userModel)
+    {
+        var createdUser = new User
+        {
+            Name = userModel.Name,
+            Email = userModel.Email,
+            Password = userModel.Password,
+            Description = userModel.Description,
+            Photo = userModel.Photo,
+        };
+
+        _dbContext.Users.Add(createdUser);
+        _dbContext.SaveChanges();
+
+        userModel.Id = createdUser.Id;
+
+        return userModel;
+    }
+
+    public UserModel Update(User updatedUser, UserModel userModel)
+    {
+        updatedUser.Name = userModel.Name;
+        updatedUser.Email = userModel.Email;
+        updatedUser.Password = userModel.Password;
+        updatedUser.Description = userModel.Description;
+        updatedUser.Photo = userModel.Photo;
+
+        _dbContext.Users.Update(updatedUser);
+        _dbContext.SaveChanges();
+
+        return userModel;
+    }
+
+    public void Delete(User user)
+    {
+        _dbContext.Users.Remove(user);
+        _dbContext.SaveChanges();
+    }
+
     public (string login, string password) GetUserLoginPassFromBasicAuth(HttpRequest request)
     {
         var userName = string.Empty;
@@ -46,10 +93,8 @@ public class UserService
         return (claimsIdentity, currentUser.Id);
     }
 
-    private User? GetUserByLogin(string email)
-    {
-        throw new NotImplementedException();
-    }
+    public User? GetUserByLogin(string email) =>
+        _dbContext.Users.FirstOrDefault(x => x.Email == email);
 
     private bool VerifyHashedPassword(string password1, string password2) =>
         password1 == password2;

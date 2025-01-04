@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Blog.Data;
 using Blog.Models;
 using Blog.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,35 +12,62 @@ namespace Blog.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly BlogDbContext _dbContext;
         private readonly UserService _userService;
 
-        public AccountController(UserService userService)
+        public AccountController(BlogDbContext dbContext)
         {
-            _userService = userService;
+            _dbContext = dbContext;
+            _userService = new UserService(_dbContext);
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            throw new NotImplementedException();
+            var currentUserEmail = HttpContext.User.Identity.Name;
+            var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser is null)
+                return NotFound();
+
+            var user = new UserModel
+            {
+                Id = currentUser.Id,
+                Name = currentUser.Name,
+                Email = currentUser.Email,
+                Description = currentUser.Description,
+                Photo = currentUser.Photo,
+            };
+            return Ok(user);
         }
 
         [HttpPost]
         public ActionResult<UserModel> Create(UserModel user)
         {
-            throw new NotImplementedException();
+            var createdUser = _userService.Create(user);
+            return Ok(createdUser);
         }
 
         [HttpPatch]
         public IActionResult Update(UserModel user)
         {
-            throw new NotImplementedException();
+            var currentUserEmail = HttpContext.User.Identity.Name;
+            var currentUser = _userService.GetUserByLogin(currentUserEmail);
+            if (currentUser != null 
+                && currentUser.Id != user.Id)
+                return BadRequest();
+            
+            var updatedUser = _userService.Update(currentUser, user);
+            return Ok(updatedUser);
         }
 
         [HttpDelete]
         public IActionResult Delete()
         {
-            throw new NotImplementedException();
+            var currentUserEmail = HttpContext.User.Identity.Name;
+            var currentUser = _userService.GetUserByLogin(currentUserEmail);
+            _userService.Delete(currentUser);
+            return Ok();
         }
 
         [HttpPost]

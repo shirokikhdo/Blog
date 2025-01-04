@@ -1,5 +1,7 @@
+using Blog.Data;
 using Blog.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true
         };
     });
+builder.Services.AddDbContext<BlogDbContext>(
+    options => 
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("SqlServerConnection")));
 
 var app = builder.Build();
 app.UseSwagger();
