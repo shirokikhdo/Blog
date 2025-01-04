@@ -31,8 +31,8 @@ builder.Services.AddDbContext<BlogDbContext>(
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

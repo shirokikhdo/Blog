@@ -3,22 +3,22 @@ using System.Security.Claims;
 using Blog.Data;
 using Blog.Models;
 using Blog.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Blog.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly BlogDbContext _dbContext;
         private readonly UserService _userService;
 
         public AccountController(BlogDbContext dbContext)
         {
-            _dbContext = dbContext;
-            _userService = new UserService(_dbContext);
+            _userService = new UserService(dbContext);
         }
 
         [HttpGet]
@@ -42,7 +42,9 @@ namespace Blog.Controllers
         }
 
         [HttpPost]
-        public ActionResult<UserModel> Create(UserModel user)
+        [AllowAnonymous]
+        public ActionResult<UserModel> Create(
+            [FromBody] UserModel user)
         {
             var createdUser = _userService.Create(user);
             return Ok(createdUser);
@@ -70,7 +72,8 @@ namespace Blog.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("token")]
+        [AllowAnonymous]
         public ActionResult<AuthToken> GetToken()
         {
             var userData = _userService.GetUserLoginPassFromBasicAuth(Request);

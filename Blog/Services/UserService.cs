@@ -81,7 +81,8 @@ public class UserService
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimsIdentity.DefaultNameClaimType, currentUser.Email)
+            new Claim(ClaimsIdentity.DefaultNameClaimType, currentUser.Email),
+            new Claim(ClaimsIdentity.DefaultRoleClaimType, "User")
         };
 
         var claimsIdentity = new ClaimsIdentity(
