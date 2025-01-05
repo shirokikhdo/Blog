@@ -18,6 +18,7 @@ public class NewsService
 
     public List<NewsModel> GetByAuthor(int userId) =>
         _dbContext.News.Where(x=>x.AuthorId == userId)
+            .OrderBy(x=>x.PostDate)
             .Reverse()
             .Select(ToModel)
             .ToList();
@@ -28,13 +29,15 @@ public class NewsService
         {
             AuthorId = userId,
             Text = newsModel.Text,
-            Image = newsModel.Image
+            Image = newsModel.Image,
+            PostDate = DateTime.Now,
         };
 
         _dbContext.News.Add(news);
         _dbContext.SaveChanges();
 
         newsModel.Id = news.Id;
+        newsModel.PostDate = news.PostDate;
 
         return newsModel;
     }
@@ -53,6 +56,8 @@ public class NewsService
 
         _dbContext.News.Update(news);
         _dbContext.SaveChanges();
+
+        newsModel = ToModel(news);
 
         return newsModel;
     }
@@ -92,12 +97,16 @@ public class NewsService
     private NewsModel ToModel(News news)
     {
         var likes = _noSqlDataService.GetNewsLikes(news.Id);
-        var newsModel = new NewsModel(
-            news.Id,
-            news.Text,
-            news.Image,
-            news.PostDate);
-        newsModel.LikesCount = likes.Users.Count;
+        var newsModel = new NewsModel
+        {
+            Id = news.Id,
+            Text = news.Text,
+            Image = news.Image,
+            PostDate = news.PostDate,
+            LikesCount = likes is null 
+                ? 0 
+                : likes.Users.Count
+        };
         return newsModel;
     }
 }

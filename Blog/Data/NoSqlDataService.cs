@@ -4,7 +4,7 @@ namespace Blog.Data;
 
 public class NoSqlDataService
 {
-    private readonly string _connectionString = "";
+    private readonly string _connectionString = "NoSqlBlogData.db";
 
     private const string SUBS = "SubsCollection";
     private const string LIKES = "LikesCollection";
