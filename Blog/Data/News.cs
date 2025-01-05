@@ -8,7 +8,7 @@ public class News
 
     public string Text { get; set; }
 
-    public byte[] Image { get; set; }
+    public byte[]? Image { get; set; }
 
     public DateTime PostDate { get; set; }
 }

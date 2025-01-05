@@ -29,6 +29,7 @@ builder.Services.AddDbContext<BlogDbContext>(
         options.UseSqlServer(
             builder.Configuration.GetConnectionString("SqlServerConnection")));
 builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<NoSqlDataService>();
 
 var app = builder.Build();
 app.UseSwagger();

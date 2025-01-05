@@ -104,6 +104,22 @@ public class UserService
     public void Subscribe(int from, int to) =>
         _noSqlDataService.SetUserSubscribes(from, to);
 
+    public List<UserModel> GetUsersByName(string name) =>
+        _dbContext.Users
+            .Where(x=>x.Name.ToLower().StartsWith(name.ToLower()))
+            .Select(ToModel)
+            .ToList();
+
     private bool VerifyHashedPassword(string password1, string password2) =>
         password1 == password2;
+
+    private UserModel ToModel(User user) =>
+        new UserModel
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Description = user.Description,
+            Photo = user.Photo
+        };
 }
