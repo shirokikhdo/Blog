@@ -97,6 +97,18 @@ public class UserService
     public User? GetUserByLogin(string email) =>
         _dbContext.Users.FirstOrDefault(x => x.Email == email);
 
+    public void Subscribe(int from, int to)
+    {
+        var sub = new UserSubscribes
+        {
+            From = from,
+            To = to
+        };
+
+        _dbContext.UserSubscribes.Add(sub);
+        _dbContext.SaveChanges();
+    }
+
     private bool VerifyHashedPassword(string password1, string password2) =>
         password1 == password2;
 }

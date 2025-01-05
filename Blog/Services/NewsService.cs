@@ -12,9 +12,10 @@ public class NewsService
         _dbContext = dbContext;
     }
 
-    public List<News> GetByAuthor(int userId) =>
+    public List<NewsModel> GetByAuthor(int userId) =>
         _dbContext.News.Where(x=>x.AuthorId == userId)
             .Reverse()
+            .Select(ToModel)
             .ToList();
 
     public NewsModel Create(NewsModel newsModel, int userId)
@@ -67,6 +68,43 @@ public class NewsService
 
     public List<NewsModel> GetNewsForCurrentUser(int userId)
     {
+        var subs = _dbContext.UserSubscribes
+            .Where(x => x.From == userId);
+        var news = new List<NewsModel>();
 
+        foreach (var sub in subs)
+        {
+            var allNewsByAuthor = _dbContext.News
+                .Where(x => x.AuthorId == sub.To);
+            news.AddRange(allNewsByAuthor.Select(ToModel));
+        }
+
+        news.Sort(new NewsModelComparer());
+        return news;
+    }
+
+    public void SetLike(int newsId, int userId)
+    {
+        var like = new NewsLikes
+        {
+            From = userId,
+            NewsId = newsId,
+        };
+
+        _dbContext.NewsLikes.Add(like);
+        _dbContext.SaveChanges();
+    }
+
+    private NewsModel ToModel(News news)
+    {
+        var likes = _dbContext.NewsLikes
+            .Count(x => x.NewsId ==  news.Id);
+        var newsModel = new NewsModel(
+            news.Id,
+            news.Text,
+            news.Image,
+            news.PostDate);
+        newsModel.LikesCount = likes;
+        return newsModel;
     }
 }
