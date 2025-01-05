@@ -8,10 +8,14 @@ namespace Blog.Services;
 public class UserService
 {
     private readonly BlogDbContext _dbContext;
+    private readonly NoSqlDataService _noSqlDataService;
 
-    public UserService(BlogDbContext dbContext)
+    public UserService(
+        BlogDbContext dbContext, 
+        NoSqlDataService noSqlDataService)
     {
         _dbContext = dbContext;
+        _noSqlDataService = noSqlDataService;
     }
 
     public UserModel Create(UserModel userModel)
@@ -97,17 +101,8 @@ public class UserService
     public User? GetUserByLogin(string email) =>
         _dbContext.Users.FirstOrDefault(x => x.Email == email);
 
-    public void Subscribe(int from, int to)
-    {
-        var sub = new UserSubscribes
-        {
-            From = from,
-            To = to
-        };
-
-        _dbContext.UserSubscribes.Add(sub);
-        _dbContext.SaveChanges();
-    }
+    public void Subscribe(int from, int to) =>
+        _noSqlDataService.SetUserSubscribes(from, to);
 
     private bool VerifyHashedPassword(string password1, string password2) =>
         password1 == password2;
