@@ -22,7 +22,7 @@ namespace Blog.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<UserModel> Get()
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
@@ -51,7 +51,7 @@ namespace Blog.Controllers
         }
 
         [HttpPatch]
-        public IActionResult Update(UserModel user)
+        public ActionResult<UserModel> Update(UserModel user)
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);

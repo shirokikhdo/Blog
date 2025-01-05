@@ -122,16 +122,6 @@ public class UserService
     private bool VerifyHashedPassword(string password1, string password2) =>
         password1 == password2;
 
-    private UserModel ToModel(User user) =>
-        new UserModel
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Description = user.Description,
-            Photo = user.Photo
-        };
-
     private UserProfile ToProfile(User user)
     {
         var userSubs = _noSqlDataService.GetUserSubscribes(user.Id);

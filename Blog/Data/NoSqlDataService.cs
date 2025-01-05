@@ -14,7 +14,7 @@ public class NoSqlDataService
         using var db = new LiteDatabase(_connectionString);
 
         var subs = db.GetCollection<UserSubscribe>(SUBS);
-        var userSubs = subs.FindOne(s => s.UserId == userId);
+        var userSubs = subs.FindOne(s => s.Id == userId);
         return userSubs;
     }
 
@@ -23,25 +23,30 @@ public class NoSqlDataService
         using var db = new LiteDatabase(_connectionString);
 
         var subs = db.GetCollection<UserSubscribe>(SUBS);
-        var userSubs = subs.FindOne(s => s.UserId == from);
+        var userSubs = subs.FindOne(s => s.Id == from);
+        var sub = new UserSub
+        {
+            Id = to,
+            Date = DateTime.Now
+        };
 
         if (userSubs != null)
         {
-            if (userSubs.Users.Contains(to)) 
+            if (userSubs.Users.Select(x=>x.Id).Contains(to)) 
                 return userSubs;
 
-            userSubs.Users.Add(to);
+            userSubs.Users.Add(sub);
             subs.Update(userSubs);
         }
         else
         {
             var newSub = new UserSubscribe
             {
-                UserId = from,
-                Users = new List<int>() {to}
+                Id = from,
+                Users = new List<UserSub>() { sub }
             };
             subs.Insert(newSub);
-            subs.EnsureIndex(x => x.UserId);
+            subs.EnsureIndex(x => x.Id);
             userSubs = newSub;
         }
 

@@ -48,6 +48,22 @@ namespace Blog.Controllers
             return Ok(createdNews);
         }
 
+        [HttpPost("random")]
+        public ActionResult<List<NewsModel>> Create(
+            [FromBody] List<NewsModel> news)
+        {
+            var currentUserEmail = HttpContext.User.Identity.Name;
+            var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser.Id != 1)
+                return BadRequest();
+
+            var allNews = news.Select(newsItem => 
+                _newsService.Create(newsItem, 2))
+                .ToList();
+            return Ok(allNews);
+        }
+
         [HttpPatch]
         public ActionResult<NewsModel> Update(
             [FromBody] NewsModel news)

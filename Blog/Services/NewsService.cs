@@ -83,7 +83,7 @@ public class NewsService
         foreach (var sub in subs)
         {
             var allNewsByAuthor = _dbContext.News
-                .Where(x => x.AuthorId == sub);
+                .Where(x => x.AuthorId == sub.Id);
             news.AddRange(allNewsByAuthor.Select(ToModel));
         }
 

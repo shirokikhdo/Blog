@@ -2,7 +2,7 @@
 
 public class UserSubscribe
 {
-    public int UserId { get; set; }
+    public int Id { get; set; }
 
-    public List<int> Users { get; set; }
+    public List<UserSub> Users { get; set; }
 }
