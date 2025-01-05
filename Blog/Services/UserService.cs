@@ -101,13 +101,22 @@ public class UserService
     public User? GetUserByLogin(string email) =>
         _dbContext.Users.FirstOrDefault(x => x.Email == email);
 
+    public UserProfile? GetUserProfileById(int userId)
+    {
+        var user = _dbContext.Users.FirstOrDefault(x => x.Id == userId);
+        var userModel = user is null 
+            ? null 
+            : ToProfile(user);
+        return userModel;
+    }
+
     public void Subscribe(int from, int to) =>
         _noSqlDataService.SetUserSubscribes(from, to);
 
-    public List<UserModel> GetUsersByName(string name) =>
+    public List<UserShortModel> GetUsersByName(string name) =>
         _dbContext.Users
             .Where(x=>x.Name.ToLower().StartsWith(name.ToLower()))
-            .Select(ToModel)
+            .Select(ToShortModel)
             .ToList();
 
     private bool VerifyHashedPassword(string password1, string password2) =>
@@ -120,6 +129,32 @@ public class UserService
             Name = user.Name,
             Email = user.Email,
             Description = user.Description,
+            Photo = user.Photo
+        };
+
+    private UserProfile ToProfile(User user)
+    {
+        var userSubs = _noSqlDataService.GetUserSubscribes(user.Id);
+        var profile = new UserProfile 
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Description = user.Description,
+            Photo = user.Photo,
+            SubsCount = userSubs is null
+                ? 0
+                : userSubs.Users.Count
+        };
+        return profile;
+    }
+
+    private UserShortModel ToShortModel(User user) =>
+        new UserShortModel
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Description = new string(user.Description?.Take(50).ToArray()),
             Photo = user.Photo
         };
 }

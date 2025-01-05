@@ -1,10 +1,12 @@
 ﻿using Blog.Models;
 using Blog.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
@@ -15,7 +17,7 @@ namespace Blog.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("all/{name}")]
         public ActionResult<List<UserModel>> GetUsersByName(string name)
         {
             var users = _userService.GetUsersByName(name);
@@ -23,7 +25,7 @@ namespace Blog.Controllers
         }
 
         [HttpPost("subscribe/{userId}")]
-        public IActionResult GetUsersByName(int userId)
+        public IActionResult Subscribe(int userId)
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
@@ -33,6 +35,13 @@ namespace Blog.Controllers
 
             _userService.Subscribe(currentUser.Id, userId);
             return Ok();
+        }
+
+        [HttpGet("{userId}")]
+        public IActionResult Get(int userId)
+        {
+            var user = _userService.GetUserProfileById(userId);
+            return Ok(user);
         }
     }
 }
