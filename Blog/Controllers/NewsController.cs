@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Blog.Data;
+using Blog.Models;
+using Blog.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
@@ -8,10 +11,25 @@ namespace Blog.Controllers
     [Route("api/[controller]")]
     public class NewsController : ControllerBase
     {
-        [HttpGet("{userId}")]
-        public IActionResult GetByAuthor(int userId)
+        private readonly NewsService _newsService;
+
+        public NewsController(NewsService newsService)
         {
-            return Ok(userId);
+            _newsService = newsService;
+        }
+
+        [HttpGet("{userId}")]
+        public ActionResult<List<News>> GetByAuthor(int userId)
+        {
+            var news = _newsService.GetByAuthor(userId);
+            return Ok(news);
+        }
+
+        [HttpPost]
+        public IActionResult Create(
+            [FromBody] NewsModel news)
+        {
+
         }
     }
 }
