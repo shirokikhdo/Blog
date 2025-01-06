@@ -1,7 +1,15 @@
+import { Route, Routes } from 'react-router-dom';
+import AppRoutes from './AppRoutes';
+
 const App = () => {
 
   return (
-    <div>Blog Client</div>
+    <Routes>
+      {AppRoutes.map((route, index) => {
+        const { element, ...rest } = route;
+          return <Route key={index} {...rest} element={element} />;
+      })}
+    </Routes>    
   );
 
 }
