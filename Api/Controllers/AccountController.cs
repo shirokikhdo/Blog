@@ -21,7 +21,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<UserModel> Get()
+        public ActionResult<UserProfile> Get()
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
@@ -29,15 +29,8 @@ namespace Api.Controllers
             if (currentUser is null)
                 return NotFound();
 
-            var user = new UserModel
-            {
-                Id = currentUser.Id,
-                Name = currentUser.Name,
-                Email = currentUser.Email,
-                Description = currentUser.Description,
-                Photo = currentUser.Photo,
-            };
-            return Ok(user);
+            var profile = _userService.ToProfile(currentUser);
+            return Ok(profile);
         }
 
         [HttpPost]

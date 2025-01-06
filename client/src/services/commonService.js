@@ -1,25 +1,16 @@
 const BASE_URL = "login";
+const TOKEN_NAME = 'Token';
+const ISONLINE_NAME = 'ONLINE';
 
 export const LOGIN_URL = '/login';
-
-function sendRequest(url, successAction, errorAction){
-    fetch(url)
-        .then(response => {
-            if(response.status === 401) {
-                window.location.href = BASE_URL;
-            } else {
-                successAction();
-            }
-        })
-        .catch(error => {
-            errorAction();
-        });
-}
+export const PROFILE_URL = '/profile';
 
 export async function getToken(login, password) {
     const url = window.config.accountUrl + "/token";
     const token = await sendAuthenticatedRequest(url, "POST", login, password);
-    console.log(token);
+    localStorage.setItem(TOKEN_NAME, token.accessToken);
+    localStorage.setItem(ISONLINE_NAME, '1');
+    window.location.href = PROFILE_URL;
 }
 
 async function sendAuthenticatedRequest(url, method, username, password, data) {
@@ -45,3 +36,41 @@ async function sendAuthenticatedRequest(url, method, username, password, data) {
         throw new Error('Ошибка ' + resultFetch.status + ': ' + resultFetch.statusText);
       }
 }
+
+export async function sendRequestWithToken(url, method, data, withToken = true) {
+    var headers = new Headers();
+
+    if (withToken){
+      const token = localStorage.getItem(TOKEN_NAME);
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    if (data) {
+      headers.set('Content-Type', 'application/json');
+    }
+  
+    var requestOptions = {
+      method: method,
+      headers: headers,
+      body: data ? JSON.stringify(data) : undefined
+    };
+    var resultFetch = await fetch(url, requestOptions);
+    if (resultFetch.ok) {
+      try {
+        const result = await resultFetch.json();
+        return result;
+      }
+      catch {
+        return;
+      }
+    }
+    else {
+        errorRequest(resultFetch.status);
+      }
+}
+
+function errorRequest(status) {
+    if (status === 401){
+      window.location.href = BASE_URL;
+    }
+  }

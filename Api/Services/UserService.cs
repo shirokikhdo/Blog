@@ -119,10 +119,7 @@ public class UserService
             .Select(ToShortModel)
             .ToList();
 
-    private bool VerifyHashedPassword(string password1, string password2) =>
-        password1 == password2;
-
-    private UserProfile ToProfile(User user)
+    public UserProfile ToProfile(User user)
     {
         var userSubs = _noSqlDataService.GetUserSubscribes(user.Id);
         var profile = new UserProfile 
@@ -138,6 +135,9 @@ public class UserService
         };
         return profile;
     }
+
+    private bool VerifyHashedPassword(string password1, string password2) =>
+        password1 == password2;
 
     private UserShortModel ToShortModel(User user) =>
         new UserShortModel
