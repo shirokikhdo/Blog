@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Blog.Data;
+namespace Api.Data;
 
 public class BlogDbContext : DbContext
 {

@@ -1,13 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Blog.Data;
-using Blog.Models;
-using Blog.Services;
+using Api.Models;
+using Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Blog.Controllers
+namespace Api.Controllers
 {
     [ApiController]
     [Authorize]

@@ -1,6 +1,6 @@
 ﻿using LiteDB;
 
-namespace Blog.Data;
+namespace Api.Data;
 
 public class NoSqlDataService
 {

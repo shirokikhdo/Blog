@@ -1,4 +1,4 @@
-﻿namespace Blog.Models;
+﻿namespace Api.Models;
 
 public class NewsModel
 {

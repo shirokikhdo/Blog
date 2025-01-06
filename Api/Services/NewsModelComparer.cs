@@ -1,6 +1,6 @@
-﻿using Blog.Models;
+﻿using Api.Models;
 
-namespace Blog.Services;
+namespace Api.Services;
 
 public class NewsModelComparer : IComparer<NewsModel>
 {

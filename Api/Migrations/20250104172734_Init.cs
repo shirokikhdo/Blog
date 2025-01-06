@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Blog.Migrations
+namespace Api.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration

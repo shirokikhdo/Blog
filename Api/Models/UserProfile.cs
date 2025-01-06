@@ -1,6 +1,6 @@
-﻿namespace Blog.Data;
+﻿namespace Api.Models;
 
-public class User
+public class UserProfile
 {
     public int Id { get; set; }
 
@@ -8,9 +8,9 @@ public class User
 
     public string Email { get; set; }
 
-    public string Password { get; set; }
-
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
     public byte[]? Photo { get; set; }
+
+    public int SubsCount { get; set; }
 }

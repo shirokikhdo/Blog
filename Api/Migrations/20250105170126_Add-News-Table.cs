@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Blog.Migrations
+namespace Api.Migrations
 {
     /// <inheritdoc />
     public partial class AddNewsTable : Migration

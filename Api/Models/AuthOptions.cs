@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Blog.Models;
+namespace Api.Models;
 
 public static class AuthOptions
 {

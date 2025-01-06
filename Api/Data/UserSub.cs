@@ -1,4 +1,4 @@
-﻿namespace Blog.Data;
+﻿namespace Api.Data;
 
 public class UserSub
 {

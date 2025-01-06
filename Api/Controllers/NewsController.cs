@@ -1,10 +1,10 @@
-﻿using Blog.Data;
-using Blog.Models;
-using Blog.Services;
+﻿using Api.Data;
+using Api.Models;
+using Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Blog.Controllers
+namespace Api.Controllers
 {
     [ApiController]
     [Authorize]

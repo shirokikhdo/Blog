@@ -1,7 +1,7 @@
-﻿using Blog.Data;
-using Blog.Models;
+﻿using Api.Data;
+using Api.Models;
 
-namespace Blog.Services;
+namespace Api.Services;
 
 public class NewsService
 {
