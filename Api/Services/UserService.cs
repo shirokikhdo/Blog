@@ -9,13 +9,16 @@ public class UserService
 {
     private readonly BlogDbContext _dbContext;
     private readonly NoSqlDataService _noSqlDataService;
+    private readonly ImageService _imageService;
 
     public UserService(
         BlogDbContext dbContext, 
-        NoSqlDataService noSqlDataService)
+        NoSqlDataService noSqlDataService, 
+        ImageService imageService)
     {
         _dbContext = dbContext;
         _noSqlDataService = noSqlDataService;
+        _imageService = imageService;
     }
 
     public UserModel Create(UserModel userModel)
@@ -26,7 +29,7 @@ public class UserService
             Email = userModel.Email,
             Password = userModel.Password,
             Description = userModel.Description,
-            Photo = userModel.Photo,
+            Photo = _imageService.GetPhoto(userModel.Photo),
         };
 
         _dbContext.Users.Add(createdUser);
@@ -43,7 +46,7 @@ public class UserService
         updatedUser.Email = userModel.Email;
         updatedUser.Password = userModel.Password;
         updatedUser.Description = userModel.Description;
-        updatedUser.Photo = userModel.Photo;
+        updatedUser.Photo = _imageService.GetPhoto(userModel.Photo);
 
         _dbContext.Users.Update(updatedUser);
         _dbContext.SaveChanges();

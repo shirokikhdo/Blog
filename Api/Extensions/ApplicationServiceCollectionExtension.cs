@@ -36,6 +36,7 @@ public static class ApplicationServiceCollectionExtension
                     configuration.GetConnectionString("SqlServerConnection")));
         services.AddTransient<UserService>();
         services.AddTransient<NewsService>();
+        services.AddTransient<ImageService>();
         services.AddTransient<NoSqlDataService>();
         services.AddCors(options =>
             options.AddPolicy("CorsPolicy", policy =>

@@ -1,14 +1,13 @@
 import React from 'react';
 
-const ImageComponent = ({ byteArray }) => {
+const ImageComponent = ({ base64String }) => {
   
-  if (byteArray === null)
-    return <image alt='Image'/>;
+  if (base64String === null) 
+    return <div></div>;
 
-  const base64String = btoa(String.fromCharCode(...byteArray));
   const imageUrl = `data:image/jpeg;base64,${base64String}`;
 
-  return <image src={imageUrl} alt='Image' />;
+  return <img style={{width: '100%'}} src={imageUrl} alt="Image" />;
 };
 
 export default ImageComponent;

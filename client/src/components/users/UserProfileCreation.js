@@ -5,14 +5,18 @@ import ImageUploader from '../ImageUploader';
 const UserProfileCreation = ({ user, setAction }) => {
   const [username, setUsername] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState('');
   const [description, setDescription] = useState(user.description);
   const [photo, setPhoto] = useState(user.photo);
+  const [userPhotoStr, setPhotoStr] = useState('');
 
   const endCreate = () => {
+    
     if(password.length === 0)
       return;
+
     const newUser = {
+      id: user.id,
       name: username,
       email: email,
       password: password,
@@ -21,6 +25,10 @@ const UserProfileCreation = ({ user, setAction }) => {
     };
     setAction(newUser);
   }
+
+const image = userPhotoStr.length > 0 
+  ? <img src={userPhotoStr} alt="Image" /> 
+  : <ImageComponent base64String={user.photo}/>;
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -37,16 +45,18 @@ const UserProfileCreation = ({ user, setAction }) => {
           defaultValue={email}/>
         <p>Password</p>
         <input 
-          type="text"
+          type="password"
           onChange={e => setPassword(e.target.value)}
           defaultValue={password}/>
         <p>Description</p>
         <textarea
           onChange={e => setDescription(e.target.value)}
           defaultValue={description}/>
-        <ImageUploader byteImageAction={(bytes) => setPhoto(bytes)}/>
-        
-        <ImageComponent byteArray={user.photo} />
+        {image}
+        <ImageUploader byteImageAction={(str, bytes) => {
+          setPhoto(bytes);
+          setPhotoStr(str);
+        }}/>
         <button onClick={endCreate}>Ok</button>
     </div>
   );
