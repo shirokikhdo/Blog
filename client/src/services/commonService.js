@@ -4,6 +4,7 @@ const ISONLINE_NAME = 'ONLINE';
 
 export const LOGIN_URL = '/login';
 export const PROFILE_URL = '/profile';
+export const SIGNUP_URL = '/signup';
 
 export async function getToken(login, password) {
     const url = window.config.accountUrl + "/token";

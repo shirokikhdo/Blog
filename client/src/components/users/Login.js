@@ -1,5 +1,5 @@
 import {useState} from "react";
-import { getToken } from "../../services/commonService";
+import { getToken, SIGNUP_URL } from "../../services/commonService";
 
 const Login = () => {
     const [username, setUsername] = useState();
@@ -7,6 +7,10 @@ const Login = () => {
 
     const enterClick = () => {
         getToken(username, password);
+    }
+
+    const registerBtnClick = () => {
+        window.location.href = SIGNUP_URL;
     }
 
     return (
@@ -23,6 +27,11 @@ const Login = () => {
                 className="btn btn-primary"
                 onClick={enterClick}>
                     Enter
+            </button>
+            <button
+                className="btn btn-link"
+                onClick={registerBtnClick}>
+                    Sign Up
             </button>
         </div>
     )

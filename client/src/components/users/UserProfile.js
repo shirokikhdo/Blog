@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUser, updateUser } from '../../services/usersService';
+import { exitFromProfile, getUser, updateUser } from '../../services/usersService';
 import ImageComponent from '../ImageComponent';
 import ModalButton from '../ModalButton';
 import UserProfileCreation from './UserProfileCreation';
@@ -40,6 +40,11 @@ const UserProfile = () => {
                             setAction={updateUserView} />}
           title = "Редактирование профиля"
           btnName="Open Modal"/>
+        <button 
+          className='btn btn-secondary'
+          onClick={() => exitFromProfile()}>
+            Exit
+        </button>
     </div>
   );
 };
