@@ -3,6 +3,7 @@ import { exitFromProfile, getUser, updateUser } from '../../services/usersServic
 import ImageComponent from '../ImageComponent';
 import ModalButton from '../ModalButton';
 import UserProfileCreation from './UserProfileCreation';
+import NewsByUser from '../news/NewsByUser';
 
 const UserProfile = () => {
   const [user, setUser] = useState({
@@ -30,10 +31,11 @@ const UserProfile = () => {
   return (
     <div>
       <h2>User Profile</h2>
-      <div style={{
-          display: 'flex', 
-          flexDirection: 'row', 
-          justifyContent: 'center'}}>
+      <div 
+        style={{
+        display: 'flex', 
+        flexDirection: 'row', 
+        justifyContent: 'center'}}>
         <div className='image-box' style={{width: '50%'}}>
           <ImageComponent base64String={user.photo} />
         </div>
@@ -41,23 +43,24 @@ const UserProfile = () => {
           <p>Name: {user.name}</p>
           <p>Email: {user.email}</p>
           <p>Description: {user.description}</p>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-around'}}>
-        <ModalButton
-            modalContent = {<UserProfileCreation
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-around'}}>
+            <ModalButton
+              modalContent = {<UserProfileCreation
                             user={user}
                             setAction={updateUserView} />}
-            title = "Редактирование профиля"
-            btnName="Edit"/>
-          <button 
-            className='btn btn-secondary'
-            onClick={() => exitFromProfile()}>
-              Exit
-          </button>
+              title = "Редактирование профиля"
+              btnName="Edit"/>
+            <button 
+              className='btn btn-secondary'
+              onClick={() => exitFromProfile()}>
+                Exit
+            </button>
           </div>
         </div>
       </div>
+      <NewsByUser userId = {user.id}/>
     </div>
   );
 };
