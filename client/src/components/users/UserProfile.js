@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { exitFromProfile, getUser, updateUser } from '../../services/usersService';
-import ImageComponent from '../ImageComponent';
 import ModalButton from '../ModalButton';
 import UserProfileCreation from './UserProfileCreation';
-import NewsByUser from '../news/NewsByUser';
+import UserView from './UserView';
 
 const UserProfile = () => {
   const [user, setUser] = useState({
+    id: 0,
     name: '',
     email: '',
     password: '',
@@ -30,22 +30,9 @@ const UserProfile = () => {
 
   return (
     <div>
-      <h2>User Profile</h2>
-      <div 
-        style={{
-        display: 'flex', 
-        flexDirection: 'row', 
-        justifyContent: 'center'}}>
-        <div className='image-box' style={{width: '50%'}}>
-          <ImageComponent base64String={user.photo} />
-        </div>
-        <div className='user-data' style={{margin: '0 10%'}}>
-          <p>Name: {user.name}</p>
-          <p>Email: {user.email}</p>
-          <p>Description: {user.description}</p>
-          <div style={{
+      <div style={{
             display: 'flex',
-            justifyContent: 'space-around'}}>
+            justifyContent: 'flex-end'}}>
             <ModalButton
               modalContent = {<UserProfileCreation
                             user={user}
@@ -58,9 +45,7 @@ const UserProfile = () => {
                 Exit
             </button>
           </div>
-        </div>
-      </div>
-      <NewsByUser userId = {user.id}/>
+          <UserView user={user}/>
     </div>
   );
 };

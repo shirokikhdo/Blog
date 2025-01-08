@@ -5,6 +5,12 @@ export async function getUser() {
     return user; 
 }
 
+export async function getPublicUser(userId) {
+    const url = `${window.config.usersUrl}/${userId}`;
+    const user = await sendRequestWithToken(url, 'GET');
+    return user; 
+}
+
 export async function updateUser(user) {
     user.photo = user.photo.toString()
     const newUser = await sendRequestWithToken(window.config.accountUrl, 'PATCH', user);
