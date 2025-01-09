@@ -2,9 +2,9 @@
 
 namespace Api.Services;
 
-public class NewsModelComparer : IComparer<NewsModel>
+public class NewsViewComparer : IComparer<NewsView>
 {
-    public int Compare(NewsModel x, NewsModel y)
+    public int Compare(NewsView x, NewsView y)
     {
         if (x.PostDate > y.PostDate)
             return -1;

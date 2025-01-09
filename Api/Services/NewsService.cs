@@ -7,20 +7,23 @@ public class NewsService
 {
     private readonly BlogDbContext _dbContext;
     private readonly NoSqlDataService _noSqlDataService;
+    private readonly ImageService _imageService;
 
     public NewsService(
         BlogDbContext dbContext, 
-        NoSqlDataService noSqlDataService)
+        NoSqlDataService noSqlDataService,
+        ImageService imageService)
     {
         _dbContext = dbContext;
         _noSqlDataService = noSqlDataService;
+        _imageService = imageService;
     }
 
-    public List<NewsModel> GetByAuthor(int userId) =>
+    public List<NewsView> GetByAuthor(int userId) =>
         _dbContext.News.Where(x=>x.AuthorId == userId)
             .OrderBy(x=>x.PostDate)
             .Reverse()
-            .Select(ToModel)
+            .Select(ToView)
             .ToList();
 
     public NewsModel Create(NewsModel newsModel, int userId)
@@ -29,7 +32,7 @@ public class NewsService
         {
             AuthorId = userId,
             Text = newsModel.Text,
-            Image = newsModel.Image,
+            Image = _imageService.GetPhoto(newsModel.Image),
             PostDate = DateTime.Now,
         };
 
@@ -42,7 +45,7 @@ public class NewsService
         return newsModel;
     }
 
-    public NewsModel Update(NewsModel newsModel, int userId)
+    public NewsView Update(NewsModel newsModel, int userId)
     {
         var news = _dbContext.News
             .FirstOrDefault(x => x.Id == newsModel.Id 
@@ -52,14 +55,16 @@ public class NewsService
             return null;
 
         news.Text = newsModel.Text;
-        news.Image = newsModel.Image;
+        var image = _imageService.GetPhoto(newsModel.Image);
+        if (!(news.Image?.Length > 10 && image.Length < 10))
+            news.Image = image;
 
         _dbContext.News.Update(news);
         _dbContext.SaveChanges();
 
-        newsModel = ToModel(news);
+        var newsView = ToView(news);
 
-        return newsModel;
+        return newsView;
     }
 
     public void Delete(int newsId, int userId)
@@ -75,38 +80,39 @@ public class NewsService
         _dbContext.SaveChanges();
     }
 
-    public List<NewsModel> GetNewsForCurrentUser(int userId)
+    public List<NewsView> GetNewsForCurrentUser(int userId)
     {
         var subs = _noSqlDataService.GetUserSubscribes(userId).Users;
-        var news = new List<NewsModel>();
+        var news = new List<NewsView>();
 
         foreach (var sub in subs)
         {
             var allNewsByAuthor = _dbContext.News
                 .Where(x => x.AuthorId == sub.Id);
-            news.AddRange(allNewsByAuthor.Select(ToModel));
+            news.AddRange(allNewsByAuthor.Select(ToView));
         }
 
-        news.Sort(new NewsModelComparer());
+        news.Sort(new NewsViewComparer());
         return news;
     }
 
     public void SetLike(int newsId, int userId) =>
         _noSqlDataService.SetNewsLikes(userId, newsId);
 
-    private NewsModel ToModel(News news)
+    private NewsView ToView(News news)
     {
         var likes = _noSqlDataService.GetNewsLikes(news.Id);
-        var newsModel = new NewsModel
+        var newsModel = new NewsView
         {
             Id = news.Id,
             Text = news.Text,
             Image = news.Image,
             PostDate = news.PostDate,
-            LikesCount = likes is null 
-                ? 0 
+            LikesCount = likes is null
+                ? 0
                 : likes.Users.Count
         };
+
         return newsModel;
     }
 }

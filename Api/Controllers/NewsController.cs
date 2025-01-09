@@ -23,17 +23,21 @@ namespace Api.Controllers
         }
 
         [HttpGet("{userId}")]
-        public ActionResult<List<News>> GetByAuthor(int userId)
+        public ActionResult<List<NewsView>> GetByAuthor(int userId)
         {
             var news = _newsService.GetByAuthor(userId);
             return Ok(news);
         }
 
         [HttpGet]
-        public ActionResult<List<NewsModel>> GetAll()
+        public ActionResult<List<NewsView>> GetAll()
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
+            
+            if (currentUser is null)
+                return NotFound();
+
             var news = _newsService.GetNewsForCurrentUser(currentUser.Id);
             return Ok(news);
         }
@@ -44,6 +48,10 @@ namespace Api.Controllers
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser is null)
+                return NotFound();
+
             var createdNews = _newsService.Create(news, currentUser.Id);
             return Ok(createdNews);
         }
@@ -55,6 +63,9 @@ namespace Api.Controllers
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
 
+            if (currentUser is null)
+                return NotFound();
+
             if (currentUser.Id != 1)
                 return BadRequest();
 
@@ -65,11 +76,15 @@ namespace Api.Controllers
         }
 
         [HttpPatch]
-        public ActionResult<NewsModel> Update(
+        public ActionResult<NewsView> Update(
             [FromBody] NewsModel news)
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser is null)
+                return NotFound();
+
             var createdNews = _newsService.Update(news, currentUser.Id);
             return Ok(createdNews);
         }
@@ -79,6 +94,10 @@ namespace Api.Controllers
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser is null)
+                return NotFound();
+
             _newsService.Delete(newsId, currentUser.Id);
             return Ok();
         }
@@ -88,6 +107,10 @@ namespace Api.Controllers
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser is null)
+                return NotFound();
+
             _newsService.SetLike(newsId, currentUser.Id);
             return Ok();
         }

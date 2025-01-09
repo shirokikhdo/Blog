@@ -30,6 +30,9 @@ namespace Api.Controllers
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
 
+            if (currentUser is null)
+                return NotFound();
+
             if (currentUser.Id == userId)
                 return BadRequest();
 
@@ -50,6 +53,9 @@ namespace Api.Controllers
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser is null)
+                return NotFound();
 
             if (currentUser.Id != 1)
                 return BadRequest();

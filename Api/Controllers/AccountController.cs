@@ -60,6 +60,10 @@ namespace Api.Controllers
         {
             var currentUserEmail = HttpContext.User.Identity.Name;
             var currentUser = _userService.GetUserByLogin(currentUserEmail);
+
+            if (currentUser is null)
+                return NotFound();
+
             _userService.Delete(currentUser);
             return Ok();
         }

@@ -12,14 +12,14 @@ export async function getPublicUser(userId) {
 }
 
 export async function updateUser(user) {
-    user.photo = user.photo.toString()
+    user.photo = user.photo.toString();
     const newUser = await sendRequestWithToken(window.config.accountUrl, 'PATCH', user);
     window.location.href = PROFILE_URL;
     return newUser;
 }
 
 export async function createUser(user) {
-    user.photo = user.photo.toString()
+    user.photo = user.photo.toString();
     const newUser = await sendRequestWithToken(window.config.accountUrl, 'POST', user, false);
     window.location.href = PROFILE_URL;
     return newUser;

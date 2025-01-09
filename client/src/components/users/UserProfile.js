@@ -37,7 +37,7 @@ const UserProfile = () => {
               modalContent = {<UserProfileCreation
                             user={user}
                             setAction={updateUserView} />}
-              title = "Редактирование профиля"
+              title = "Edit profile"
               btnName="Edit"/>
             <button 
               className='btn btn-secondary'

@@ -4,6 +4,7 @@ import News from "./News";
 
 const NewsByUser = ( { userId } ) => {
     const [news, setNews] = useState([]);
+    const [updateUser, setUpdateUser] = useState(0);
     
     const getAllNews = async () => {
         if(!userId || userId === 0)
@@ -14,16 +15,18 @@ const NewsByUser = ( { userId } ) => {
 
     useEffect( () => {
         getAllNews();
-    }, [userId]);
+    }, [userId, updateUser]);
 
     return(
         <div>
             {news.map((el, key) => {
                 return <News
                         key = {key}
+                        id = {el.id}
                         text = {el.text}
-                        imageStr = {el.imageStr}
-                        date = {el.postDate} />
+                        imageStr = {el.image}
+                        date = {el.postDate}
+                        updateAction={setUpdateUser} />
             })}
         </div>
     )
