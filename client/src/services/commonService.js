@@ -73,5 +73,14 @@ export async function sendRequestWithToken(url, method, data, withToken = true) 
 function errorRequest(status) {
     if (status === 401){
       window.location.href = BASE_URL;
+      clearStore();
     }
   }
+
+export function clearStore() {
+  localStorage.clear();
+}
+
+export function isUserOnline() {
+  return localStorage.getItem(ISONLINE_NAME) === '1';
+}

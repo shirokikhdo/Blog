@@ -1,4 +1,4 @@
-import { LOGIN_URL, PROFILE_URL, sendRequestWithToken } from "./commonService";
+import { LOGIN_URL, PROFILE_URL, sendRequestWithToken, clearStore } from "./commonService";
 
 export async function getUser() {
     const user = await sendRequestWithToken(window.config.accountUrl, 'GET');
@@ -29,6 +29,12 @@ export function exitFromProfile() {
     const answer = window.confirm("Are your sure?")
     if(!answer)
         return;
-    localStorage.clear();
+    clearStore();
     window.location.href = LOGIN_URL;
+}
+
+export async function getUsersByName(username) {
+    const url = `${window.config.usersUrl}/all/${username}`;
+    const users = await sendRequestWithToken(url, 'GET');
+    return users;
 }
