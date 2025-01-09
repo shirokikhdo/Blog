@@ -1,8 +1,7 @@
-import { PROFILE_URL } from "../../services/commonService";
 import { deleteNews, updateNews } from "../../services/newsService";
-import ImageComponent from "../ImageComponent";
 import ModalButton from "../ModalButton"
 import NewsCreation from "./NewsCreation";
+import NewsView from "./NewsView";
 
 const News = ( { id, text, imageStr, date, updateAction } ) => {
 
@@ -33,13 +32,10 @@ const News = ( { id, text, imageStr, date, updateAction } ) => {
                         Delete
                 </button>
             </div>
-            <div className="img-box">
-                <ImageComponent base64String={imageStr} />
-            </div>
-            <div>
-                <p>{date}</p>
-                {text}
-            </div>
+            <NewsView
+                date={date}
+                text={text}
+                imageStr={imageStr} />
         </div>
     )
 }

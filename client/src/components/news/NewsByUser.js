@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { getNewsByUser } from "../../services/newsService";
-import News from "./News";
+import NewsView from './NewsView';
 
 const NewsByUser = ( { userId } ) => {
     const [news, setNews] = useState([]);
-    const [updateUser, setUpdateUser] = useState(0);
     
     const getAllNews = async () => {
         if(!userId || userId === 0)
@@ -15,18 +14,16 @@ const NewsByUser = ( { userId } ) => {
 
     useEffect( () => {
         getAllNews();
-    }, [userId, updateUser]);
+    }, [userId]);
 
     return(
         <div>
             {news.map((el, key) => {
-                return <News
+                return <NewsView
                         key = {key}
-                        id = {el.id}
                         text = {el.text}
                         imageStr = {el.image}
-                        date = {el.postDate}
-                        updateAction={setUpdateUser} />
+                        date = {el.postDate} />
             })}
         </div>
     )

@@ -45,7 +45,7 @@ const UserProfile = () => {
                 Exit
             </button>
           </div>
-          <UserView user={user}/>
+          <UserView user={user} isProfile={true}/> 
     </div>
   );
 };

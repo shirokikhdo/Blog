@@ -38,3 +38,9 @@ export async function getUsersByName(username) {
     const users = await sendRequestWithToken(url, 'GET');
     return users;
 }
+
+export async function subscribeToUser(userId){
+    const url = `${window.config.usersUrl}/subscribe/${userId}`;
+    const users = await sendRequestWithToken(url, 'POST');
+    return users;
+}

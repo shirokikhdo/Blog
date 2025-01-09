@@ -6,6 +6,11 @@ export async function getNewsByUser(userId) {
     return allNews;
 }
 
+export async function getNews() {
+    const allNews = await sendRequestWithToken(window.config.newsUrl, 'GET');
+    return allNews;
+}
+
 export async function createNews(news) {
     news.image = news.image.toString();
     const newNews = await sendRequestWithToken(window.config.newsUrl, 'POST', news);

@@ -3,9 +3,15 @@ import SignUp from "./components/users/SignUp";
 import UserProfile from "./components/users/UserProfile";
 import UserPublicView from "./components/users/UserPublicView";
 import SearchUser from "./components/users/SearchUser";
-import { LOGIN_URL, PROFILE_URL, SIGNUP_URL } from "./services/commonService";
+import NewsForUser from "./components/news/NewsForUser";
+import { LOGIN_URL, PROFILE_URL, SIGNUP_URL, ALLUSERS_URL, ALLNEWS_URL} from "./services/commonService";
+import { Home } from "./components/Home";
 
 const AppRoutes = [
+  {
+    index: true,
+    element: <Home />
+  },
   {
     path: LOGIN_URL,
     element: <Login />
@@ -19,12 +25,16 @@ const AppRoutes = [
     element: <SignUp />
   },
   {
-    path: '/all',
+    path: ALLUSERS_URL,
     element: <SearchUser />
   },
   {
-    path: '/all/:userId',
+    path: `${ALLUSERS_URL}/:userId`,
     element: <UserPublicView />
+  },
+  {
+    path: ALLNEWS_URL,
+    element: <NewsForUser />
   }
 ];
 

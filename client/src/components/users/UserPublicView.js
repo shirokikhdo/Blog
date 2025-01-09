@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import UserView from "./UserView";
-import { getPublicUser } from "./../../services/usersService"
+import { getPublicUser } from "./../../services/usersService";
+import { subscribeToUser } from "./../../services/usersService";
 
 const UserPublicView = () => {
     const [user, setUser] = useState({
@@ -15,6 +16,10 @@ const UserPublicView = () => {
 
       const params = useParams();
       const userId = params.userId;
+
+      const subscribeClick = () => {
+        subscribeToUser(userId);
+      }
     
       useEffect(() => {
         const fetchUser = async () => {
