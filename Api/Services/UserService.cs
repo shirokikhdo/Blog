@@ -5,12 +5,25 @@ using Api.Models;
 
 namespace Api.Services;
 
+/// <summary>
+/// Сервис для управления пользователями в блоге.
+/// </summary>
+/// <remarks>
+/// Этот класс предоставляет методы для создания, обновления, удаления пользователей,
+/// а также для получения информации о пользователях и их подписках.
+/// </remarks>
 public class UserService
 {
     private readonly BlogDbContext _dbContext;
     private readonly NoSqlDataService _noSqlDataService;
     private readonly ImageService _imageService;
 
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="UserService"/>.
+    /// </summary>
+    /// <param name="dbContext">Контекст базы данных для взаимодействия с пользователями.</param>
+    /// <param name="noSqlDataService">Сервис для работы с NoSQL данными.</param>
+    /// <param name="imageService">Сервис для обработки изображений пользователей.</param>
     public UserService(
         BlogDbContext dbContext, 
         NoSqlDataService noSqlDataService, 
@@ -21,6 +34,11 @@ public class UserService
         _imageService = imageService;
     }
 
+    /// <summary>
+    /// Создает нового пользователя.
+    /// </summary>
+    /// <param name="userModel">Модель пользователя, содержащая информацию о новом пользователе.</param>
+    /// <returns>Созданная модель пользователя с установленным идентификатором.</returns>
     public UserModel Create(UserModel userModel)
     {
         var createdUser = new User
@@ -40,6 +58,12 @@ public class UserService
         return userModel;
     }
 
+    /// <summary>
+    /// Обновляет информацию о существующем пользователе.
+    /// </summary>
+    /// <param name="updatedUser">Обновляемый пользователь.</param>
+    /// <param name="userModel">Модель пользователя с новой информацией.</param>
+    /// <returns>Обновленная модель пользователя.</returns>
     public UserModel Update(User updatedUser, UserModel userModel)
     {
         updatedUser.Name = userModel.Name;
@@ -54,12 +78,21 @@ public class UserService
         return userModel;
     }
 
+    /// <summary>
+    /// Удаляет пользователя.
+    /// </summary>
+    /// <param name="user">Пользователь, которого необходимо удалить.</param>
     public void Delete(User user)
     {
         _dbContext.Users.Remove(user);
         _dbContext.SaveChanges();
     }
 
+    /// <summary>
+    /// Извлекает логин и пароль пользователя из заголовка Basic Authentication.
+    /// </summary>
+    /// <param name="request">HTTP-запрос, содержащий заголовок авторизации.</param>
+    /// <returns>Кортеж, содержащий логин и пароль пользователя.</returns>
     public (string login, string password) GetUserLoginPassFromBasicAuth(HttpRequest request)
     {
         var userName = string.Empty;
@@ -78,6 +111,12 @@ public class UserService
         return (userName, userPass);
     }
 
+    /// <summary>
+    /// Получает идентификацию пользователя по электронной почте и паролю.
+    /// </summary>
+    /// <param name="email">Электронная почта пользователя.</param>
+    /// <param name="password">Пароль пользователя.</param>
+    /// <returns>Кортеж, содержащий идентификацию и идентификатор пользователя, если пользователь найден; иначе - null.</returns>
     public (ClaimsIdentity identity, int id)? GetIdentity(string email, string password)
     {
         var currentUser = GetUserByLogin(email);
@@ -101,9 +140,19 @@ public class UserService
         return (claimsIdentity, currentUser.Id);
     }
 
+    /// <summary>
+    /// Получает пользователя по электронной почте.
+    /// </summary>
+    /// <param name="email">Электронная почта пользователя.</param>
+    /// <returns>Объект пользователя или null, если пользователь не найден.</returns>
     public User? GetUserByLogin(string email) =>
         _dbContext.Users.FirstOrDefault(x => x.Email == email);
 
+    /// <summary>
+    /// Получает профиль пользователя по его идентификатору.
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя.</param>
+    /// <returns>Модель профиля пользователя или null, если пользователь не найден.</returns>
     public UserProfile? GetUserProfileById(int userId)
     {
         var user = _dbContext.Users.FirstOrDefault(x => x.Id == userId);
@@ -113,15 +162,30 @@ public class UserService
         return userModel;
     }
 
+    /// <summary>
+    /// Подписывает одного пользователя на другого.
+    /// </summary>
+    /// <param name="from">Идентификатор подписчика.</param>
+    /// <param name="to">Идентификатор подписываемого пользователя.</param>
     public void Subscribe(int from, int to) =>
         _noSqlDataService.SetUserSubscribes(from, to);
 
+    /// <summary>
+    /// Получает список пользователей по имени.
+    /// </summary>
+    /// <param name="name">Имя для поиска пользователей.</param>
+    /// <returns>Список коротких моделей пользователей, соответствующих заданному имени.</returns>
     public List<UserShortModel> GetUsersByName(string name) =>
         _dbContext.Users
             .Where(x=>x.Name.ToLower().StartsWith(name.ToLower()))
             .Select(ToShortModel)
             .ToList();
 
+    /// <summary>
+    /// Преобразует объект <see cref="User"/> в объект <see cref="UserProfile"/>.
+    /// </summary>
+    /// <param name="user">Пользователь, который будет преобразован в профиль.</param>
+    /// <returns>Объект <see cref="UserProfile"/>, представляющий профиль пользователя.</returns>
     public UserProfile ToProfile(User user)
     {
         var userSubs = _noSqlDataService.GetUserSubscribes(user.Id);
@@ -139,9 +203,22 @@ public class UserService
         return profile;
     }
 
+    /// <summary>
+    /// Проверяет, совпадают ли два пароля.
+    /// </summary>
+    /// <param name="password1">Первый пароль для сравнения.</param>
+    /// <param name="password2">Второй пароль для сравнения.</param>
+    /// <returns>
+    /// <c>true</c>, если пароли совпадают; в противном случае <c>false</c>.
+    /// </returns>
     private bool VerifyHashedPassword(string password1, string password2) =>
         password1 == password2;
 
+    /// <summary>
+    /// Преобразует объект <see cref="User"/> в объект <see cref="UserShortModel"/>.
+    /// </summary>
+    /// <param name="user">Пользователь, который будет преобразован в короткую модель.</param>
+    /// <returns>Объект <see cref="UserShortModel"/>, представляющий краткую информацию о пользователе.</returns>
     private UserShortModel ToShortModel(User user) =>
         new UserShortModel
         {

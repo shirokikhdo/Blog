@@ -2,6 +2,9 @@
 
 namespace Api.Data;
 
+/// <summary>
+/// Сервис для работы с данными в NoSQL базе данных.
+/// </summary>
 public class NoSqlDataService
 {
     private readonly string _connectionString = "NoSqlBlogData.db";
@@ -9,6 +12,11 @@ public class NoSqlDataService
     private const string SUBS = "SubsCollection";
     private const string LIKES = "LikesCollection";
 
+    /// <summary>
+    /// Получает подписки пользователя по его идентификатору.
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя.</param>
+    /// <returns>Объект <see cref="UserSubscribe"/>, содержащий подписки пользователя, или null, если подписок нет.</returns>
     public UserSubscribe GetUserSubscribes(int userId)
     {
         using var db = new LiteDatabase(_connectionString);
@@ -18,6 +26,12 @@ public class NoSqlDataService
         return userSubs;
     }
 
+    /// <summary>
+    /// Устанавливает подписку одного пользователя на другого.
+    /// </summary>
+    /// <param name="from">Идентификатор пользователя, который подписывается.</param>
+    /// <param name="to">Идентификатор пользователя, на которого осуществляется подписка.</param>
+    /// <returns>Объект <see cref="UserSubscribe"/>, содержащий обновленные подписки пользователя.</returns>
     public UserSubscribe SetUserSubscribes(int from, int to)
     {
         using var db = new LiteDatabase(_connectionString);
@@ -53,6 +67,11 @@ public class NoSqlDataService
         return userSubs;
     }
 
+    /// <summary>
+    /// Получает лайки для новости по её идентификатору.
+    /// </summary>
+    /// <param name="newsId">Идентификатор новости.</param>
+    /// <returns>Объект <see cref="NewsLike"/>, содержащий лайки для новости, или null, если лайков нет.</returns>
     public NewsLike GetNewsLikes(int newsId)
     {
         using var db = new LiteDatabase(_connectionString);
@@ -62,6 +81,12 @@ public class NoSqlDataService
         return newsLike;
     }
 
+    /// <summary>
+    /// Устанавливает лайк от пользователя на новость.
+    /// </summary>
+    /// <param name="from">Идентификатор пользователя, ставящего лайк.</param>
+    /// <param name="newsId">Идентификатор новости, на которую ставится лайк.</param>
+    /// <returns>Объект <see cref="NewsLike"/>, содержащий обновленные лайки для новости.</returns>
     public NewsLike SetNewsLikes(int from, int newsId)
     {
         using var db = new LiteDatabase(_connectionString);

@@ -7,8 +7,17 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Extensions;
 
+/// <summary>
+/// Расширение для коллекции служб приложения.
+/// </summary>
 public static class ApplicationServiceCollectionExtension
 {
+    /// <summary>
+    /// Добавляет необходимые службы в коллекцию служб приложения.
+    /// </summary>
+    /// <param name="services">Коллекция служб для добавления.</param>
+    /// <param name="configuration">Конфигурация приложения, содержащая настройки.</param>
+    /// <returns>Обновленная коллекция служб.</returns>
     public static IServiceCollection AddServiceCollection(
         this IServiceCollection services, IConfiguration configuration)
     {

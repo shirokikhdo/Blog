@@ -8,6 +8,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления учетными записями пользователей.
+    /// </summary>
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
@@ -15,11 +18,19 @@ namespace Api.Controllers
     {
         private readonly UserService _userService;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="AccountController"/>.
+        /// </summary>
+        /// <param name="userService">Сервис для работы с пользователями.</param>
         public AccountController(UserService userService)
         {
             _userService = userService;
         }
 
+        /// <summary>
+        /// Получает профиль текущего пользователя.
+        /// </summary>
+        /// <returns>Профиль пользователя.</returns>
         [HttpGet]
         public ActionResult<UserProfile> Get()
         {
@@ -33,6 +44,11 @@ namespace Api.Controllers
             return Ok(profile);
         }
 
+        /// <summary>
+        /// Создает нового пользователя.
+        /// </summary>
+        /// <param name="user">Модель пользователя, содержащая информацию о новом пользователе.</param>
+        /// <returns>Созданная модель пользователя.</returns>
         [HttpPost]
         [AllowAnonymous]
         public ActionResult<UserModel> Create(
@@ -42,6 +58,11 @@ namespace Api.Controllers
             return Ok(createdUser);
         }
 
+        /// <summary>
+        /// Обновляет информацию о текущем пользователе.
+        /// </summary>
+        /// <param name="user">Модель пользователя с обновленной информацией.</param>
+        /// <returns>Обновленная модель пользователя.</returns>
         [HttpPatch]
         public ActionResult<UserModel> Update(UserModel user)
         {
@@ -55,6 +76,10 @@ namespace Api.Controllers
             return Ok(updatedUser);
         }
 
+        /// <summary>
+        /// Удаляет текущего пользователя.
+        /// </summary>
+        /// <returns>Статус выполнения операции.</returns>
         [HttpDelete]
         public IActionResult Delete()
         {
@@ -68,6 +93,10 @@ namespace Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Получает токен аутентификации для пользователя.
+        /// </summary>
+        /// <returns>Токен аутентификации.</returns>
         [HttpPost("token")]
         [AllowAnonymous]
         public ActionResult<AuthToken> GetToken()
